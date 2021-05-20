@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FaceDetection": {
+      "commandName": "Project",
+      "commandLineArgs": "apikey \"image"
+    }
+  }
+}
