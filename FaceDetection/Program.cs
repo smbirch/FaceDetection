@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 
 namespace FaceDetection
 {
@@ -21,13 +22,32 @@ namespace FaceDetection
 
             //load image
 
+            using (var fs = File.OpenRead(filename))
+            {
+                fs.CopyTo(httpPost.GetRequestStream());
+            }
 
 
             //submit image to API endpoint
 
+            string data = getResponse(httpPost);
+
             //inspect JSON
 
             //draw rectangles on the image (copy)
+        }
+
+        private static string getResponse(object httpPost)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static HttpWebRequest CreateHttpRequest(Uri target, string method, string contentType)
+        {
+            var request = WebRequest.CreateHttp(target);
+            request.Method = method;
+            request.ContentType = contentType;
+            return request;
         }
     }
 }
