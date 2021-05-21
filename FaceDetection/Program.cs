@@ -2,6 +2,13 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Collections.Generic;
+
+//using SixLabors.Primitives;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.PixelFormats;
+
 
 namespace FaceDetection
 {
@@ -35,6 +42,24 @@ namespace FaceDetection
 
             //inspect JSON
 
+            var rectangles = GetRectangles(data);
+
+            //draw rectangles on the image (copy)
+
+            var img = Image.Load(filename);
+
+            foreach (var rectangle in GetRectangles(data))
+            {
+
+            }
+
+            SaveImage(img, outputfilename);
+
+
+        }
+
+        private static IEnumerable<PointF[]> GetRectangles(string data)
+        {
             var faces = JArray.Parse(data);
             foreach (var face in faces)
             {
@@ -44,9 +69,17 @@ namespace FaceDetection
                 var left = (int)face["faceRectangle"]["left"];
                 var width = (int)face["faceRectangle"]["width"];
                 var height = (int)face["faceRectangle"]["height"];
-            }
 
-            //draw rectangles on the image (copy)
+                var rectangle = new PointF[]
+                {
+                    new PointF(left, top),
+                    new PointF(left + width, top),
+                    new PointF(left + width, top + height),
+                    new PointF(left, top + height),
+                };
+
+                yield return rectangle;
+            }
         }
 
         private static string getResponse(HttpWebRequest httpPost)
