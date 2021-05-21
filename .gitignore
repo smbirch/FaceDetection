@@ -6,7 +6,7 @@
 /FaceDetection/Properties/
 
 # User-specific files
-*.rsuser
+*.rsuser 
 *.suo
 *.user
 *.userosscache
