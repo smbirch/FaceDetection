@@ -60,7 +60,8 @@ namespace FaceDetection
             var outputfilename = $"{Environment.CurrentDirectory}\\{Path.GetFileNameWithoutExtension(filename)}-2{Path.GetExtension(filename)}";
             SaveImage(img, outputfilename);
 
-            OpenWithDefaultApp(filename);
+            OpenWithDefaultApp(outputfilename);
+
         }
 
         private static void OpenWithDefaultApp(string filename)
