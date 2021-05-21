@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 using System.Net;
 
@@ -16,8 +17,9 @@ namespace FaceDetection
 
             //http request
 
+
             var region = "westus";
-            var target = new Uri($"https//{region}.api.cognitive.microsoft.com/face/1.0/detect/?subscription-key={apiKey}");
+            var target = new Uri($"https://{region}.api.cognitive.microsoft.com/face/v1.0/detect/?subscription-key={apiKey}");
             var httpPost = CreateHttpRequest(target, "POST", "application/octet-stream");
 
             //load image
@@ -27,19 +29,33 @@ namespace FaceDetection
                 fs.CopyTo(httpPost.GetRequestStream());
             }
 
-
             //submit image to API endpoint
 
             string data = getResponse(httpPost);
 
             //inspect JSON
 
+            var faces = JArray.Parse(data);
+            foreach (var face in faces)
+            {
+                var id = (string)face["faceId"];
+
+                var top = (int)face["faceRectangle"]["top"];
+                var left = (int)face["faceRectangle"]["left"];
+                var width = (int)face["faceRectangle"]["width"];
+                var height = (int)face["faceRectangle"]["height"];
+            }
+
             //draw rectangles on the image (copy)
         }
 
-        private static string getResponse(object httpPost)
+        private static string getResponse(HttpWebRequest httpPost)
         {
-            throw new NotImplementedException();
+            using (var response = httpPost.GetResponse())
+            using (var sr = new StreamReader(response.GetResponseStream()))
+            {
+                return sr.ReadToEnd();
+            }
         }
 
         private static HttpWebRequest CreateHttpRequest(Uri target, string method, string contentType)
@@ -52,5 +68,3 @@ namespace FaceDetection
     }
 }
 
-
-// https://csharpdetection.cognitiveservices.azure.com/
