@@ -8,7 +8,8 @@ using System.Collections.Generic;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.PixelFormats;
-
+using SixLabors.ImageSharp.Drawing.Processing;
+using System.Diagnostics;
 
 namespace FaceDetection
 {
@@ -48,14 +49,37 @@ namespace FaceDetection
 
             var img = Image.Load(filename);
 
+            var count = 0;
             foreach (var rectangle in GetRectangles(data))
             {
-
+                img.Mutate(a => a.DrawPolygon(Color.HotPink, 20, rectangle));
+                count++;
             }
+            Console.WriteLine($"Number of faces detected: {count}");
 
+            var outputfilename = $"{Environment.CurrentDirectory}\\{Path.GetFileNameWithoutExtension(filename)}-2{Path.GetExtension(filename)}";
             SaveImage(img, outputfilename);
 
+            OpenWithDefaultApp(filename);
+        }
 
+        private static void OpenWithDefaultApp(string filename)
+        {
+            var si = new ProcessStartInfo()
+            {
+                FileName = "explorer.exe",
+                Arguments = filename,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+            Process.Start(si);
+        }
+
+        private static void SaveImage(Image img, string outputfilename)
+        {
+            using (var fs = File.Create(outputfilename))
+            {
+                img.SaveAsJpeg(fs);
+            }
         }
 
         private static IEnumerable<PointF[]> GetRectangles(string data)
