@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "FaceDetection": {
-      "commandName": "Project",
-      "commandLineArgs": "0c7a2ba34e0f449b98eadceba58e623f \"C:\\Users\\SMB\\Documents\\Programming\\C#\\FaceDetection\\FaceDetection\\getty_517194189_373099.jpg\""
-    }
-  }
-}
